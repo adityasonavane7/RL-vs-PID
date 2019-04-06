@@ -73,8 +73,9 @@ while(True):
 		frame = cv2.line(frame,(int(xEnd2),int(yEnd2)),(int(xEnd),int(yEnd)),[255,0,0])
 	
 	if (BallEnd1 and End1End2):
-		print((BallEnd1Dist/End1End2Dist)*40)
-	
+		normalisedDistance = ((BallEnd1Dist/End1End2Dist)*40)
+		print(str(normalisedDistance))
+		cv2.putText(frame, str(normalisedDistance), (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),lineType=cv2.LINE_AA)
 	cv2.imshow('opimg',outputImg)	
 	cv2.imshow('frame',frame)
 	if cv2.waitKey(1) & 0xFF == ord('q'):
