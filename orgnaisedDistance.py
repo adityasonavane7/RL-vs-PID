@@ -6,9 +6,10 @@ import serial
 import time
 from serial import Serial
 from simple_pid import PID
-#import matplotlib.pyplot as plt
-
-pid = PID(0.55,0.01,0.3,setpoint = 16)
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt	
+pid = PID(0.5,0.05,0.3,setpoint = 16)
 
 cap = cv2.VideoCapture(0)
 #Ball color definitions Bouncy
@@ -17,8 +18,8 @@ colorLowBall = np.array([20,70,240])
 
 End1End2Dist = 0
 #Ball color definitions pong
-colorHighBall = np.array([70,170,220])
-colorLowBall = np.array([30,140,200])
+#colorHighBall = np.array([70,170,220])
+#colorLowBall = np.array([30,140,200])
 
 normalisedDistance = 0
 
@@ -38,11 +39,12 @@ BallEnd1 = False
 End1End2 = False
 
 graphErrors = []
+timeMap = 0
 error = 0
 errorPrev = 0
 data = "0"
 dataprev = "0"
-ser = serial.Serial('/dev/ttyUSB1',baudrate = 115200)
+ser = serial.Serial('/dev/ttyUSB0',baudrate = 115200)
 time.sleep(2)
 XYCoordinates = []
 while(True):
@@ -100,6 +102,8 @@ while(True):
 	cv2.imshow('frame',frame)
 	dataprev = data
 	error = pid(normalisedDistance)
+	graphErrors.append([error,timeMap])
+	timeMap = timeMap + 1
 	#errorPrev = error
 	#error = (proportional * (normalisedDistance-21)) + (derivative * (errorPrev - error))
 	if (error < -20):
