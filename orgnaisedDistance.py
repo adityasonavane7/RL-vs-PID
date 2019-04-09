@@ -7,7 +7,6 @@ import time
 from serial import Serial
 from simple_pid import PID
 import matplotlib
-matplotlib.use('agg')
 import matplotlib.pyplot as plt	
 pid = PID(0.5,0.05,0.3,setpoint = 16)
 
@@ -44,6 +43,8 @@ error = 0
 errorPrev = 0
 data = "0"
 dataprev = "0"
+plt.plot(error)
+plt.show()
 ser = serial.Serial('/dev/ttyUSB0',baudrate = 115200)
 time.sleep(2)
 XYCoordinates = []
@@ -102,8 +103,8 @@ while(True):
 	cv2.imshow('frame',frame)
 	dataprev = data
 	error = pid(normalisedDistance)
-	graphErrors.append([error,timeMap])
-	timeMap = timeMap + 1
+	plt.plot(error)
+	plt.show(block = False)
 	#errorPrev = error
 	#error = (proportional * (normalisedDistance-21)) + (derivative * (errorPrev - error))
 	if (error < -20):
