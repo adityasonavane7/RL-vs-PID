@@ -10,11 +10,11 @@ Beam Colours
 '''
 class Distance:
 	def __init__(self):
-		self.colorHighBall = np.array([50,90,255]) 
-		self.colorLowBall = np.array([20,70,240])
+		self.colorLowBall = np.array([10,120,20]) 
+		self.colorHighBall = np.array([70,200,120])
 		
-		self.beamMinColor = np.array([75,129,150])
-		self.beamMaxColor = np.array([110,190,185])
+		self.beamMinColor = np.array([10,10,120])
+		self.beamMaxColor = np.array([50,50,190])
 		self.cap = cv2.VideoCapture(0)
 	
 	def euclideanDistance(self,x1,y1,x2,y2):
@@ -22,10 +22,10 @@ class Distance:
 	
 	def getDistance(self):
 		self.ret,self.frame = self.cap.read()
-		self.element = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
+		#self.element = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
 		self.maskBeam = cv2.inRange(self.frame,self.beamMinColor,self.beamMaxColor)
 		self.maskBall = cv2.inRange(self.frame,self.colorLowBall,self.colorHighBall)		
-		self.maskBeam = cv2.erode(self.maskBeam, self.element, iterations = 3)
+		#self.maskBeam = cv2.erode(self.maskBeam, self.element, iterations = 1)
 		self.centerBeam = cv2.moments(self.maskBeam)
 		self.cXBeam = int(self.centerBeam["m10"]/self.centerBeam["m00"])
 		self.cYBeam = int(self.centerBeam["m01"]/self.centerBeam["m00"])
@@ -40,7 +40,7 @@ class Distance:
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			print("exit")
 		self.distance = self.euclideanDistance(self.cXBeam,self.cYBeam,self.cXBall,self.cYBall)
-		if (self.cXBeam < self.cXBall):
+		if (self.cXBeam > self.cXBall):
 			self.distance = -1 * self.distance
 		return self.outFrame,self.frame,self.distance,self.maskBall
 
